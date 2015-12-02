@@ -18,9 +18,10 @@ CSE Project 1.3.5 Collaborating on a Project
 Draft, Do Not Distribute
 Version 8/23/2013 
 '''
-
+enemy = []
 import random
 def play_round(player1, player2, history1, history2, score1, score2):
+    enemy = [player1, player2]
     '''
     Calls the get_action() function which will get the characters
     'c' or 'b' for collude or betray for each player.
@@ -435,20 +436,44 @@ def get_action(player, history, opponent_history, score, opponent_score, getting
 
     ######
     ######
-    #
-    elif player == 13:
-        if getting_team_name:
-            return 'loyal vengeful'
-        else:
-            if len(opponent_history)==0: #It's the first round: collude
-                return 'c'
-            elif history[-1]=='c' and opponent_history[-1]=='b':
-                return 'b' # betray is they were severely punished last time
-            else:
-                return 'c' #otherwise collude
-    
-    
 
+    elif player == 13: 
+        if getting_team_name:
+            return 'No Strings on me'
+
+
+        else:
+
+            if 11 in enemy:
+                return 'c'
+
+            elif 10 in enemy:
+                return 'b'
+
+
+            
+            else:
+                
+               
+                #####Code for Beginning Bots    #####IMPORTANT NOTE##### (How can I tell if it's a bot? If it's human, this might fail.)
+                
+                if len(opponent_history)==0:#Bots always collude on first round, Do the same
+                    return 'c'
+                elif len(opponent_history)==1: #Bots collude if colluded with first round, betray them
+                    return 'b'
+                
+                #####
+                
+                #####Code for all other Situations
+                
+                elif history[-1]=='c' and opponent_history[-1]=='b': #They Betrayed me last time, I'll do the same
+                    return 'b'
+              
+                
+                #####
+                
+                else:
+                    return random.choice(['b', 'c']) #If nothing applies, choose randomly
 
 
 
@@ -687,11 +712,11 @@ def play_tournament(num_players):
             results.write('player ' + str(player) + ': ' + \
                     str(int(scores[player])/num_players) + ' points: '+\
                     team_names[player]+'\n')
-                    
+        
                     
         #append the file showing algorithms
         results.write('\n\n' + '-'*79 + '\n' + \
-                    'Here is the code that produced this data:\n\n')
+        'Here is the code that produced this data:\n\n')
         this_code_file = open(__file__, 'r')
         for line in this_code_file:
             results.write(line)
@@ -717,7 +742,7 @@ def play_tournament(num_players):
     print('Total:\t',end='')
     for player1 in range(num_players):
         print(str(int(scores[player1])),end='\t')
-
+    
     print('\n\n\n Average per round, with team strategy names:\n\n')
     #print team ids, total scores, and names
     for player in range(num_players):
